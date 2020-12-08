@@ -53,14 +53,29 @@ def get_value(field_name = None, net_total=None):
     
     
     validate_coupon_code(coupon.coupon_name)
-    
-    discount_type = frappe.db.get_value('Pricing Rule', {'name': pricing_rule}, ['rate_or_discount'])
+
+
+    discount = frappe.get_doc('Pricing Rule', {'Title' : field_name})
+
+    discount_type = discount.rate_or_discount
+
     if discount_type == 'Discount Percentage':
-        disc_val = frappe.db.get_value('Pricing Rule', {'name': pricing_rule}, ['discount_percentage'])
+        disc_val = discount.discount_percentage
         disc_type = "Percentage"
-    elif discount_type == 'Discount Amount':
-        disc_val = frappe.db.get_value('Pricing Rule', {'name': pricing_rule}, ['discount_amount'])
+
+    elif discount_type=='Discount Amount':
+        disc_val = discount.discount_amount
         disc_type = "Amount"
+    
+
+
+    #discount_type = frappe.db.get_value('Pricing Rule', {'name': pricing_rule}, ['rate_or_discount'])
+    #if discount_type == 'Discount Percentage':
+     #   disc_val = frappe.db.get_value('Pricing Rule', {'name': pricing_rule}, ['discount_percentage'])
+      #  disc_type = "Percentage"
+    #elif discount_type == 'Discount Amount':
+     #   disc_val = frappe.db.get_value('Pricing Rule', {'name': pricing_rule}, ['discount_amount'])
+      #  disc_type = "Amount"
     
     min_amt = frappe.db.get_value('Pricing Rule', {'name': pricing_rule}, ['min_amt'])
     max_amt = frappe.db.get_value('Pricing Rule', {'name': pricing_rule}, ['max_amt'])
