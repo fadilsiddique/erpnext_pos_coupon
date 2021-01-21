@@ -33,8 +33,20 @@ def validate_coupon_code(coupon_name):
             frappe.throw(_("Sorry, this coupon code is no longer valid"))
 
 
+
+
 @frappe.whitelist()
-def get_value(field_name = None, net_total=None):
+def get_value(field_name = None, net_total=None, qty_total = None, cart_items = None):
+    
+    # cart = cart_items.dict()
+    cart = json.loads(cart_items)
+    frappe.throw(cart['CCB'])
+    key_list = list(cart.values())
+    frappe.msgprint(key_list)
+
+    
+
+
     if field_name is None:
         frappe.throw("Please enter a coupon code")
 
@@ -55,7 +67,7 @@ def get_value(field_name = None, net_total=None):
     validate_coupon_code(coupon.coupon_name)
 
 
-    discount = frappe.get_doc('Pricing Rule', {'Title' : field_name})
+    discount = frappe.get_doc('Pricing Rule',pricing_rule)
 
     discount_type = discount.rate_or_discount
 
@@ -69,16 +81,10 @@ def get_value(field_name = None, net_total=None):
     
 
 
-    #discount_type = frappe.db.get_value('Pricing Rule', {'name': pricing_rule}, ['rate_or_discount'])
-    #if discount_type == 'Discount Percentage':
-     #   disc_val = frappe.db.get_value('Pricing Rule', {'name': pricing_rule}, ['discount_percentage'])
-      #  disc_type = "Percentage"
-    #elif discount_type == 'Discount Amount':
-     #   disc_val = frappe.db.get_value('Pricing Rule', {'name': pricing_rule}, ['discount_amount'])
-      #  disc_type = "Amount"
+    amount = frappe.get_doc('Pricing Rule', pricing_rule)
+    min_amt = amount.min_amt
+    max_amt = amount.max_amt
     
-    min_amt = frappe.db.get_value('Pricing Rule', {'name': pricing_rule}, ['min_amt'])
-    max_amt = frappe.db.get_value('Pricing Rule', {'name': pricing_rule}, ['max_amt'])
 
     net_total_int = int(net_total)
     if min_amt:
@@ -88,6 +94,35 @@ def get_value(field_name = None, net_total=None):
         if max_amt<net_total_int:
             frappe.throw("Total exceeds max amount")
 
+
+    quantity = frappe.get_doc('Pricing Rule',pricing_rule)
+    min_qty = quantity.min_qty
+    max_qty = quantity.max_qty
+
+    total_qty_int =int(qty_total)
+    if min_qty:
+        if min_qty>total_qty_int:
+            frappe.throw("Minimum quantity not met")
+
+    if max_qty:
+        if max_qty<total_qty_int:
+            frappe.throw("Total exceeds max quantity")
+
+    price_or_product_discount = frappe.get_doc('Pricing Rule', pricing_rule)
+    price_or_product_discount_type = price_or_product_discount.price_or_product_discount
+
+
+    #if price_or_product_discount_type =='Product':
+
+        #key_list = list(cart_items.keys())
+        #frappe.throw(key_list)
+
+
+    
+            
+
+    
+
     data_k = {"discount_type": disc_type, "discount_value": disc_val, "customer": customer_name, "coupon_type": coupon_type}
     data = json.dumps(data_k)
 
@@ -95,3 +130,4 @@ def get_value(field_name = None, net_total=None):
     
     #discount_rate = frappe.db.get_value('Pricing Rule', {'name': coupon}, ['rate'])
     return (data)
+
