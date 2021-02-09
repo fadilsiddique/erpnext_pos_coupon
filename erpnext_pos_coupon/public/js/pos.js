@@ -11,7 +11,7 @@ function page_changed(event)
 
         var button_order = document.createElement('button');            // creates a button
         button_order.innerHTML = 'Show/Hide Order';                     // assign name of button
-        button_order.classList.add('show_order');                       // assign a class for button
+        button_order.classList.add('btn' ,'btn-primary','order');                       // assign a class for button
         button_order.onclick = function () {                            // onclick of button, item-cart and pos cart toggles
         $(".pos-cart").fadeToggle("3000");      
         }
@@ -29,7 +29,7 @@ function page_changed(event)
         totalElm.classList.add('col-8')                                 // class is assigned to the div
         var button_pay = document.createElement('button');              // created a button
         button_pay.innerHTML = 'Pay';                                   // assign name of button
-        button_pay.classList.add("col-4");                              // assigned a class for button
+        button_pay.classList.add('btn', 'btn-primary','pay');                              // assigned a class for button
         let pos_pay = $('div.num-col.brand-primary');
         button_pay.onclick = function () {                              // on click of mobile pos pay, pay button of pos is clicked and route into payments.
 
@@ -52,11 +52,9 @@ function page_changed(event)
         
         let mposAmount = document.querySelector('.col-8');
         let roundTotal = document.querySelector('.rounded-total-value')
-
-            window.setInterval( function() {
-            let totalAmount = document.querySelector('.grand-total-value');
-            mposAmount.innerText =  totalAmount.textContent;
-            },100);
+            
+            
+        
         var route = frappe.get_route();
         if(route[0] == "pos")
         {
@@ -71,10 +69,15 @@ function page_changed(event)
             }
         }
         else if(route[0]=="point-of-sale")
-        {
+        {   
+            window.setInterval( function() {
+            let totalAmount = document.querySelector('.grand-total-value');
+            mposAmount.innerText =  totalAmount.textContent;
+            },100);
+            
             console.log("works without onloads")
             var button_off = document.createElement('button');
-            button_off.classList.add('coupon_button')
+            button_off.classList.add('btn', 'btn-primary', 'coupon')
             button_off.style.color = "white";
             button_off.innerHTML = 'Add Coupon';
             let container = document.querySelector('div.clearfix');
