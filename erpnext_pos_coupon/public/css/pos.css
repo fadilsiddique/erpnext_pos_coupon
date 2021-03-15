@@ -13,11 +13,14 @@
  
      .fixed-bottom  {
        position: fixed;
+       display: flex;
        bottom : 0;
        padding: 10px 8px;
        background-color: white;
        z-index: 999;
-       width: 100%
+       width: 91%;
+       border: 1px solid #d1d8dd;
+       margin: 0 15px;
      }
  
      .fixed-bottom button, .fixed-bottom input {
@@ -34,14 +37,15 @@
        padding: 0px !important;
        font-size: large;
        margin-left: 18px;
-       
-       float: left !important;
-       display: block !important;
+       display: flex !important;
        margin-left: 15px !important;
+       justify-content: flex-start;
      }
      .pay {
        width: 30% !important;
        height: 33px;
+       display: flex;
+       justify-content: flex-start;
        
      }
 
